@@ -1,6 +1,16 @@
 #!/bin/bash
 CURRENT_DATE_TIME=`date +"%D %T"`
+
+
 echo "###############################################" >> /home/pi/sensor_distance/mainlog.log
+
+FILESIZE_LOG=$(stat -c%s "/home/pi/sensor_distance/mainlog.log")
+echo "Current size of log file in byte: $FILESIZE_LOG"
+if [ "$FILESIZE_LOG" -gt "500000000" ]; then #Massimo 500 MB circa
+	echo "" > /home/pi/sensor_distance/mainlog.log
+	echo "File di log pulito, inizio di nuovo" >> /home/pi/sensor_distance/mainlog.log
+fi
+
 echo "START SCRIPT | $CURRENT_DATE_TIME" >> /home/pi/sensor_distance/mainlog.log
 
 
