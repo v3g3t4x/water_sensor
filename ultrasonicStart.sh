@@ -1,5 +1,9 @@
 #!/bin/bash
 CURRENT_DATE_TIME=`date +"%D %T"`
+ALTEZZA_BOILER_CM=153 #sotto il tappo
+ALTEZZA_MASSIMA_ACQUA_CM=143  #dove arriva al massimo l'acqua da terra
+LITRI_TOTALI_ACQUA_BOILER=3000
+DISTANZA_TRA_SENSORE_E_ACQUA=$((ALTEZZA_BOILER_CM-$ALTEZZA_MASSIMA_ACQUA_CM))
 
 
 echo "###############################################" >> /home/pi/sensor_distance/mainlog.log
@@ -13,11 +17,6 @@ fi
 
 echo "START SCRIPT | $CURRENT_DATE_TIME" >> /home/pi/sensor_distance/mainlog.log
 
-
-ALTEZZA_BOILER_CM=153
-ALTEZZA_MASSIMA_ACQUA_CM=143
-DISTANZA_TRA_SENSORE_E_ACQUA=10
-LITRI_TOTALI_ACQUA_BOILER=3000
 LITRI_PER_CM_H=$((LITRI_TOTALI_ACQUA_BOILER/$ALTEZZA_MASSIMA_ACQUA_CM))
 LITRI_PER_CM_H=$((LITRI_PER_CM_H+1))
 
