@@ -5,25 +5,25 @@ ALTEZZA_MASSIMA_ACQUA_CM=143  #dove arriva al massimo l'acqua da terra
 LITRI_TOTALI_ACQUA_BOILER=3000
 DISTANZA_TRA_SENSORE_E_ACQUA=$((ALTEZZA_BOILER_CM-$ALTEZZA_MASSIMA_ACQUA_CM))
 
-
 echo "###############################################" >> /home/pi/sensor_distance/mainlog.log
 
+############# CHECK LOG SIZE AND RESET LOG FILE ######################
 FILESIZE_LOG=$(stat -c%s "/home/pi/sensor_distance/mainlog.log")
-echo "Current size of log file in byte: $FILESIZE_LOG"
+echo "Current size of log file in byte: $FILESIZE_LOG" >> /home/pi/sensor_distance/mainlog.log
 if [ "$FILESIZE_LOG" -gt "500000000" ]; then #Massimo 500 MB circa
 	echo "" > /home/pi/sensor_distance/mainlog.log
 	echo "File di log pulito, inizio di nuovo" >> /home/pi/sensor_distance/mainlog.log
 fi
+######################################################################
 
 echo "START SCRIPT | $CURRENT_DATE_TIME" >> /home/pi/sensor_distance/mainlog.log
-
 LITRI_PER_CM_H=$((LITRI_TOTALI_ACQUA_BOILER/$ALTEZZA_MASSIMA_ACQUA_CM))
 LITRI_PER_CM_H=$((LITRI_PER_CM_H+1))
-
 echo "litri per cm di altezza: $LITRI_PER_CM_H" >> /home/pi/sensor_distance/mainlog.log
 
-echo "READ SENSOR VALUE" >> /home/pi/sensor_distance/mainlog.log
 
+################# READ ULTRASONIC SENSOR VALUE #######################
+echo "READ SENSOR VALUE" >> /home/pi/sensor_distance/mainlog.log
 #### INIZIO ESECUZIONE CALCOLI ####
 #VA LETTO UN VALORE INTERO DAL SENSORE
 curr_sensor_value=143 #Valore in cm della distanza dal coperchio
@@ -31,8 +31,11 @@ python start_sensor.py > last_run_sensor.log
 tail -1 last_run_sensor.log | cut -d ' ' -f 2 | cut -d '.' -f 1 > last_distance.log
 IS_DISTANCE=`wc -l last_distance.log`
 IS_ERROR=`cat last_distance.log  | grep -i Errore | wc -l`
+######################################################################
 
 
+######################### PREPARE SMS TEXT ###########################
+echo "PREPARE SMS TEXT"  >> /home/pi/sensor_distance/mainlog.log
 if [ "$IS_ERROR" -eq "1" ]; then
 	echo "SENSORE NON FUNZIONANTE" >> /home/pi/sensor_distance/mainlog.log
 	SMS_TEXT_DEFAULT="[BOILER $CURRENT_DATE_TIME]: Sensore non funzionante. Verificare!"
@@ -59,24 +62,23 @@ else
 	else
 	    SMS_TEXT_DEFAULT="[BOILER $CURRENT_DATE_TIME]: $value_percent% di acqua disponibile. Circa $value_litri litri (lettura ultrasuoni $curr_sensor_value cm).";   
 	fi
-
 	echo "[Percentuale di acqua rimanente: $value_percent%]" >> /home/pi/sensor_distance/mainlog.log
 	echo "" >> /home/pi/sensor_distance/mainlog.log
-	#### FINE ESECUZIONE CALCOLI ####
 fi
-#### PREPARO TESTO SMS ####
-echo "PREPARE SMS TEXT"  >> /home/pi/sensor_distance/mainlog.log
-
 echo "TXT: $SMS_TEXT_DEFAULT"  >> /home/pi/sensor_distance/mainlog.log
-#### FINE PREPARAZIONE SMS ####
+######################################################################
 
 
+############################## INVIO SMS #############################
 #### INVIO SMS ####
 echo "START SEND"  >> /home/pi/sensor_distance/mainlog.log
 isSent="N";
+
+#inserire qui comando di invio
+
 echo "ESITO INVIO: $isSent"  >> /home/pi/sensor_distance/mainlog.log
 echo "END SEND"  >> /home/pi/sensor_distance/mainlog.log
-#### FINE INVIO SMS ####
+######################################################################
 
 echo "END SCRIPT"  >> /home/pi/sensor_distance/mainlog.log
 echo "###############################################" >> /home/pi/sensor_distance/mainlog.log
