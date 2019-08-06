@@ -24,9 +24,7 @@ echo "litri per cm di altezza: $LITRI_PER_CM_H" >> /home/pi/sensor_distance/main
 
 ################# READ ULTRASONIC SENSOR VALUE #######################
 echo "READ SENSOR VALUE" >> /home/pi/sensor_distance/mainlog.log
-#### INIZIO ESECUZIONE CALCOLI ####
-#VA LETTO UN VALORE INTERO DAL SENSORE
-curr_sensor_value=143 #Valore in cm della distanza dal coperchio
+
 python start_sensor.py > last_run_sensor.log
 tail -1 last_run_sensor.log | cut -d ' ' -f 2 | cut -d '.' -f 1 > last_distance.log
 IS_DISTANCE=`wc -l last_distance.log`
