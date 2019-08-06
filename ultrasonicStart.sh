@@ -70,7 +70,6 @@ echo "TXT: $SMS_TEXT_DEFAULT"  >> /home/pi/sensor_distance/mainlog.log
 
 
 ############################## INVIO SMS #############################
-#### INVIO SMS ####
 echo "START SEND"  >> /home/pi/sensor_distance/mainlog.log
 isSent="N";
 
