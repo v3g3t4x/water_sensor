@@ -1,11 +1,18 @@
 #!/bin/bash
 CURRENT_DATE_TIME=`date +"%D %T"`
-ALTEZZA_BOILER_CM=153 #sotto il tappo
-ALTEZZA_MASSIMA_ACQUA_CM=143  #dove arriva al massimo l'acqua da terra
+ALTEZZA_BOILER_CM=101 #sotto il tappo
+ALTEZZA_MASSIMA_ACQUA_CM=90  #dove arriva al massimo l'acqua da terra
 LITRI_TOTALI_ACQUA_BOILER=3000
 DISTANZA_TRA_SENSORE_E_ACQUA=$((ALTEZZA_BOILER_CM-$ALTEZZA_MASSIMA_ACQUA_CM))
 
 echo "###############################################" >> /home/pi/sensor_distance/mainlog.log
+
+python /home/pi/sensor_distance/start_sensor.py
+python /home/pi/sensor_distance/start_sensor.py
+python /home/pi/sensor_distance/start_sensor.py
+python /home/pi/sensor_distance/start_sensor.py
+
+sudo gammu --identify
 
 ############# CHECK LOG SIZE AND RESET LOG FILE ######################
 FILESIZE_LOG=$(stat -c%s "/home/pi/sensor_distance/mainlog.log")
@@ -73,7 +80,11 @@ isSent="N";
 
 #inserire qui comando di invio
 
-echo "ESITO INVIO: $isSent"  >> /home/pi/sensor_distance/mainlog.log
+echo "START SEND MARCO"
+echo $SMS_TEXT_DEFAULT | sudo gammu sendsms TEXT numero_tel
+
+
+#echo "ESITO INVIO: $isSent"  >> /home/pi/sensor_distance/mainlog.log
 echo "END SEND"  >> /home/pi/sensor_distance/mainlog.log
 ######################################################################
 
