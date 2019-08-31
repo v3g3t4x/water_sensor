@@ -1,5 +1,5 @@
 #!/bin/bash
-CURRENT_DATE_TIME=`date +"%D %T"`
+CURRENT_DATE_TIME=`date +"%d/%m/%y %T"`
 ALTEZZA_BOILER_CM=101 #sotto il tappo
 ALTEZZA_MASSIMA_ACQUA_CM=90  #dove arriva al massimo l'acqua da terra
 LITRI_TOTALI_ACQUA_BOILER=3000
@@ -80,9 +80,8 @@ isSent="N";
 
 #inserire qui comando di invio
 
-echo "START SEND MARCO"
-echo $SMS_TEXT_DEFAULT | sudo gammu sendsms TEXT numero_tel
-
+echo "START SEND SMS"
+echo $SMS_TEXT_DEFAULT | sudo gammu sendsms TEXT <REPLACE_WITH_PHONE_NUMBER>
 
 #echo "ESITO INVIO: $isSent"  >> /home/pi/sensor_distance/mainlog.log
 echo "END SEND"  >> /home/pi/sensor_distance/mainlog.log
